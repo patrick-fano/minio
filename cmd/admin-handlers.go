@@ -1959,9 +1959,9 @@ func (a adminAPIHandlers) HealthInfoHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	deadline := 10 * time.Second // Default deadline is 10secs for health diagnostics.
-	if query.Get(string(madmin.HealthDataTypePerfNet)) != "" ||
-		query.Get(string(madmin.HealthDataTypePerfDrive)) != "" ||
-		query.Get(string(madmin.HealthDataTypePerfObj)) != "" {
+	if query.Get(string("netperf")) != "" ||
+		query.Get(string("driveperf")) != "" ||
+		query.Get(string("objperf")) != "" {
 		deadline = 1 * time.Hour
 	}
 	if dstr := r.Form.Get("deadline"); dstr != "" {
@@ -2226,7 +2226,7 @@ func (a adminAPIHandlers) HealthInfoHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	getAndWriteDrivePerfInfo := func() {
-		if query.Get(string(madmin.HealthDataTypePerfDrive)) == "true" {
+		if query.Get(string("driveperf")) == "true" {
 			opts := madmin.DriveSpeedTestOpts{
 				Serial:    false,
 				BlockSize: 4 * humanize.MiByte,
@@ -2245,7 +2245,7 @@ func (a adminAPIHandlers) HealthInfoHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	getAndWriteObjPerfInfo := func() {
-		if query.Get(string(madmin.HealthDataTypePerfObj)) == "true" {
+		if query.Get(string("objperf")) == "true" {
 			concurrent := 32
 
 			storageInfo, _ := objectAPI.StorageInfo(ctx)
@@ -2291,7 +2291,7 @@ func (a adminAPIHandlers) HealthInfoHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	getAndWriteNetPerfInfo := func() {
-		if query.Get(string(madmin.HealthDataTypePerfObj)) == "true" {
+		if query.Get(string("objperf")) == "true" {
 			if !globalIsDistErasure {
 				return
 			}
